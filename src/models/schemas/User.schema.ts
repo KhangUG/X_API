@@ -26,6 +26,9 @@ interface UserType {
 }
 
 export default class User {
+  static findOne(arg0: { email: any }) {
+    throw new Error('Method not implemented.')
+  }
   _id?: ObjectId
   name: string
   email: string
