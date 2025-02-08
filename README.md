@@ -1,4 +1,4 @@
-# API Twitter
+# X_API clone from Twitter
 
 ## Introduction
 The X_API is a backend application built with Node.js to manage Twitter-related functionalities, including posting tweets, retrieving tweet lists, following users, and more.
