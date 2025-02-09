@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import { registerValidator } from '~/middlewares/users.middlewares'
-import { ParamsDictionary } from 'express-serve-static-core'
+import { NextFunction, ParamsDictionary } from 'express-serve-static-core'
 import User from '~/models/schemas/User.schema'
 import databaseService from '~/services/database.services'
 import usersService from '~/services/users.services'
@@ -21,16 +21,15 @@ export const loginController = async (req: Request, res: Response) => {
   }
 }
 
-export const registerController = async (req: Request<ParamsDictionary, any, RegisterReqBody>, res: Response) => {
-  try {
-    const result = await usersService.register(req.body)
-    res.status(200).json({
-      message: 'Register success'
-    })
-    console.log(result)
-  } catch (error) {
-    res.status(400).json({
-      message: 'Register fail'
-    })
-  }
+export const registerController = async (
+  req: Request<ParamsDictionary, any, RegisterReqBody>,
+  res: Response,
+  next: NextFunction
+) => {
+  // throw new Error('Function not implemented.')
+  const result = await usersService.register(req.body)
+  res.status(200).json({
+    message: 'Register success'
+  })
+  console.log(result)
 }
