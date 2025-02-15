@@ -5,6 +5,8 @@ import { RegisterReqBody } from '~/models/requests/User.requests'
 import { hashPassword } from '~/utils/crypto'
 import { signToken } from '~/utils/jwt'
 import { tokenType } from '~/constants/enum'
+import RefreshToken from '~/models/schemas/refreshToken.schema'
+import { ObjectId } from 'mongodb'
 
 class UsersService {
   // Hàm này sẽ tạo ra một access token và một refresh token
@@ -31,6 +33,10 @@ class UsersService {
       }
     })
   }
+
+  private sigAccesstokenAndRefreshToken(user_id: string) {
+    return Promise.all([this.sigAccessToken(user_id), this.sigRefreshToken(user_id)]) // Gọi hai hàm tạo token ở trên
+  }
   async register(payload: RegisterReqBody) {
     const result = await databaseService.users.insertOne(
       new User({
@@ -40,10 +46,12 @@ class UsersService {
       })
     )
     const user_id = result.insertedId.toString()
-    const [access_token, refresh_token] = await Promise.all([
-      this.sigAccessToken(user_id),
-      this.sigRefreshToken(user_id)
-    ]) // Gọi hai hàm tạo token ở trên
+    const [access_token, refresh_token] = await this.sigAccesstokenAndRefreshToken(user_id) // Tạo access token và refresh token
+
+    await databaseService.refreshTokens.insertOne(
+      new RefreshToken({ _id: new ObjectId(), user_id: new ObjectId(user_id), token: refresh_token })
+    ) // Lưu refresh token vào database
+
     return {
       access_token,
       refresh_token,
@@ -59,7 +67,18 @@ class UsersService {
 
     return Boolean(user) // Trả về true nếu tìm thấy người dùng, false nếu không tìm thấy
   }
+  async login(user_id: string) {
+    const [access_token, refresh_token] = await this.sigAccesstokenAndRefreshToken(user_id) // Tạo access token và refresh token
+    await databaseService.refreshTokens.insertOne(
+      new RefreshToken({ _id: new ObjectId(), user_id: new ObjectId(user_id), token: refresh_token })
+    ) // Lưu refresh token vào database
+    return {
+      access_token,
+      refresh_token
+    } // Trả về access token và refresh token
+  }
 }
+
 // Tạo một đối tượng mới từ class UsersService
 const usersService = new UsersService()
 export default usersService

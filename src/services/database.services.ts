@@ -1,6 +1,7 @@
 import { MongoClient, Db, Collection } from 'mongodb'
 import User from '../models/schemas/User.schema'
 import { config } from 'dotenv'
+import RefreshToken from '~/models/schemas/refreshToken.schema'
 config()
 
 // URI kết nối tới MongoDB
@@ -24,6 +25,9 @@ class DatabaseServices {
   }
   get users(): Collection<User> {
     return this.db.collection(process.env.DB_USER_COLLECTION as string)
+  }
+  get refreshTokens(): Collection<RefreshToken> {
+    return this.db.collection(process.env.DB_REFRESH_TOKEN_COLLECTION as string)
   }
 }
 
