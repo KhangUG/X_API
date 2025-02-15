@@ -7,6 +7,9 @@ import { signToken } from '~/utils/jwt'
 import { tokenType } from '~/constants/enum'
 import RefreshToken from '~/models/schemas/refreshToken.schema'
 import { ObjectId } from 'mongodb'
+import { config } from 'dotenv'
+
+config()
 
 class UsersService {
   // Hàm này sẽ tạo ra một access token và một refresh token
@@ -47,7 +50,7 @@ class UsersService {
     )
     const user_id = result.insertedId.toString()
     const [access_token, refresh_token] = await this.sigAccesstokenAndRefreshToken(user_id) // Tạo access token và refresh token
-
+    console.log(access_token, refresh_token)
     await databaseService.refreshTokens.insertOne(
       new RefreshToken({ _id: new ObjectId(), user_id: new ObjectId(user_id), token: refresh_token })
     ) // Lưu refresh token vào database
@@ -60,6 +63,7 @@ class UsersService {
         user_id
       }
     } // Trả về thông tin người dùng vừa đăng ký
+    
   }
   async checkEmailExist(email: string) {
     // Sử dụng await để đợi kết quả từ findOne
