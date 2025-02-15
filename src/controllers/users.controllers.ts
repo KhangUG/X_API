@@ -16,6 +16,7 @@ export const loginController = async (req: Request, res: Response) => {
     message: 'Login success',
     result
   })
+  console.log(result)
 }
 
 export const registerController = async (

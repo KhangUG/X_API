@@ -12,12 +12,8 @@ export const USER_MESSAGE = {
   INVALID_CONFIRM_NEW_PASSWORD: 'invalid confirm new password',
   INVALID_USER_ID: 'invalid user id',
   INVALID_USER: 'invalid user',
-  INVALID_USER_ROLE: 'invalid user role',
-  INVALID_USER_STATUS: 'invalid user status',
-  INVALID_USER_EMAIL: 'invalid user email',
-  INVALID_USER_NAME: 'invalid user name',
-  INVALID_USER_PASSWORD: 'invalid user password',
-
+  
+  ACCESS_TOKEN_IS_REQUIRED: 'access token is required',
   EMAIL_OR_PASSWORD_INCORRECT: 'Email or password is incorrect',
   USER_ALREADY_EXIST: 'user already exist',
   USER_CREATED: 'user created', 
