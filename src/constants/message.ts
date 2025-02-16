@@ -14,6 +14,11 @@ export const USER_MESSAGE = {
   INVALID_USER: 'invalid user',
   
   ACCESS_TOKEN_IS_REQUIRED: 'access token is required',
+  ACCESS_TOKEN_IS_INVALID: 'access token is invalid',
+  REFRESH_TOKEN_IS_REQUIRED: 'refresh token is required',
+  REFRESH_TOKEN_IS_INVALID: 'refresh token is invalid',
+  REFRESH_TOKEN_OR_NOT_EXIST: 'refresh token is not exist',
+
   EMAIL_OR_PASSWORD_INCORRECT: 'Email or password is incorrect',
   USER_ALREADY_EXIST: 'user already exist',
   USER_CREATED: 'user created', 

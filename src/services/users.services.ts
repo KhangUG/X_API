@@ -17,7 +17,7 @@ class UsersService {
     return signToken({
       payload: {
         user_id,
-        type_type: tokenType.ACCESS_TOKEN
+        token_type: tokenType.ACCESS_TOKEN
       },
       options: {
         expiresIn: parseInt(process.env.ACCESS_TOKEN_EXPIRE_IN as string)
@@ -29,7 +29,7 @@ class UsersService {
     return signToken({
       payload: {
         user_id,
-        type_type: tokenType.REFRESH_TOKEN
+        token_type: tokenType.REFRESH_TOKEN
       },
       options: {
         expiresIn: parseInt(process.env.REFRESH_TOKEN_EXPIRE_IN as string)
@@ -81,7 +81,17 @@ class UsersService {
       refresh_token
     } // Trả về access token và refresh token
   }
+
+  async logout(refreshToken: string) {
+    await databaseService.refreshTokens.deleteOne({ token: refreshToken }) // Xóa refresh token khỏi database
+    return {
+      message: 'Logout success'
+    } // Trả về thông báo logout thành công
+  }
 }
+
+
+
 
 // Tạo một đối tượng mới từ class UsersService
 const usersService = new UsersService()
