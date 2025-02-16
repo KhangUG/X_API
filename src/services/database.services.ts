@@ -26,6 +26,7 @@ class DatabaseServices {
   get users(): Collection<User> {
     return this.db.collection(process.env.DB_USER_COLLECTION as string)
   }
+
   get refreshTokens(): Collection<RefreshToken> {
     return this.db.collection(process.env.DB_REFRESH_TOKEN_COLLECTION as string)
   }
