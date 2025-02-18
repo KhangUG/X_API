@@ -4,9 +4,11 @@ import { ParamsDictionary } from 'express-serve-static-core'
 import User from '~/models/schemas/User.schema'
 import databaseService from '~/services/database.services'
 import usersService from '~/services/users.services'
-import { LogoutReqBody, RegisterReqBody } from '~/models/requests/User.requests'
+import { LogoutReqBody, RegisterReqBody, TokenPayload } from '~/models/requests/User.requests'
 import { Result } from 'express-validator'
 import { ObjectId } from 'mongodb'
+import { httpStatus } from '~/constants/httpStatus'
+import { USER_MESSAGE } from '~/constants/message'
 
 export const loginController = async (req: Request, res: Response) => {
   const user = req.user as User
@@ -36,4 +38,36 @@ export const logoutController = async (req: Request<ParamsDictionary, any, Logou
   const { refreshToken } = req.body
   const result = await usersService.logout(refreshToken)
   res.json(result)
+}
+
+
+export const verifyEmailController = (handler: any) => {
+  return async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
+    try {
+      const { user_id } = req.decoded_email_verify_token as TokenPayload
+      const user = await databaseService.users.findOne({
+        _id: new ObjectId(user_id)
+      })
+      // Nếu không tìm thấy user thì mình sẽ báo lỗi
+      if (!user) {
+        return res.status(httpStatus.notFound).json({
+          message: USER_MESSAGE.USER_NOT_FOUND
+        })
+      }
+      // Đã verify rồi thì mình sẽ không báo lỗi
+      // Mà mình sẽ trả về status OK với message là đã verify trước đó rồi
+      if (user.email_verify_token === '') {
+        return res.json({
+          message: USER_MESSAGE.EMAIL_ALREADY_VERIFED_BEFORE
+        })
+      }
+      const result = await usersService.verifyEmail(user_id)
+      return res.json({
+        message: USER_MESSAGE.EMAIL_VERIFY_SUCCESS,
+        result
+      })
+    } catch (error) {
+      next(error)
+    }
+  }
 }

@@ -8,19 +8,22 @@ import { tokenType } from '~/constants/enum'
 import RefreshToken from '~/models/schemas/refreshToken.schema'
 import { ObjectId } from 'mongodb'
 import { config } from 'dotenv'
+import { access } from 'fs'
 
 config()
 
 class UsersService {
   // Hàm này sẽ tạo ra một access token và một refresh token
   private sigAccessToken(user_id: string) {
+    const expiresIn = process.env.ACCESS_TOKEN_EXPIRE_IN || '15m'
     return signToken({
       payload: {
         user_id,
         token_type: tokenType.ACCESS_TOKEN
       },
+      privateKey: process.env.JWT_SECRET_ACCESS_TOKEN as string,
       options: {
-        expiresIn: parseInt(process.env.ACCESS_TOKEN_EXPIRE_IN as string)
+        expiresIn: parseInt(expiresIn)
       }
     })
   }
@@ -31,8 +34,22 @@ class UsersService {
         user_id,
         token_type: tokenType.REFRESH_TOKEN
       },
+      privateKey: process.env.JWT_SECRET_REFRESH_TOKEN as string,
       options: {
         expiresIn: parseInt(process.env.REFRESH_TOKEN_EXPIRE_IN as string)
+      }
+    })
+  }
+
+  private sigEmailVerifyToken(user_id: string) {
+    return signToken({
+      payload: {
+        user_id,
+        token_type: tokenType.EMAIL_VERIFY_TOKEN
+      },
+      privateKey: process.env.JWT_SECRET_EMAIL_VERIFY_TOKEN as string,
+      options: {
+        expiresIn: parseInt(process.env.EMAIL_VERIFY_TOKEN_EXPIRE_IN as string)
       }
     })
   }
@@ -41,20 +58,23 @@ class UsersService {
     return Promise.all([this.sigAccessToken(user_id), this.sigRefreshToken(user_id)]) // Gọi hai hàm tạo token ở trên
   }
   async register(payload: RegisterReqBody) {
-    const result = await databaseService.users.insertOne(
+    const user_id = new ObjectId().toString()
+    const email_verify_token = await this.sigEmailVerifyToken(user_id) // Tạo email verify token
+    await databaseService.users.insertOne(
       new User({
         ...payload,
+        _id: new ObjectId(user_id),
+        email_verify_token,
         date_of_birth: new Date(payload.date_of_birth),
         password: hashPassword(payload.password)
       })
     )
-    const user_id = result.insertedId.toString()
     const [access_token, refresh_token] = await this.sigAccesstokenAndRefreshToken(user_id) // Tạo access token và refresh token
     console.log(access_token, refresh_token)
     await databaseService.refreshTokens.insertOne(
       new RefreshToken({ _id: new ObjectId(), user_id: new ObjectId(user_id), token: refresh_token })
     ) // Lưu refresh token vào database
-
+    console.log('email_verify_token: ', email_verify_token)
     return {
       access_token,
       refresh_token,
@@ -63,7 +83,6 @@ class UsersService {
         user_id
       }
     } // Trả về thông tin người dùng vừa đăng ký
-    
   }
   async checkEmailExist(email: string) {
     // Sử dụng await để đợi kết quả từ findOne
@@ -88,10 +107,27 @@ class UsersService {
       message: 'Logout success'
     } // Trả về thông báo logout thành công
   }
+
+  async verifyEmail(user_id: string) {
+    const [token] = await Promise.all([
+      this.sigAccesstokenAndRefreshToken(user_id),
+      databaseService.users.updateOne(
+        { _id: new ObjectId(user_id) },
+        {
+          $set: {
+            email_verify_token: '',
+            updated_at: new Date()
+          }
+        }
+      )
+    ])
+    const [access_token, refresh_token] = token
+    return {
+      access_token,
+      refresh_token
+    }
+  }
 }
-
-
-
 
 // Tạo một đối tượng mới từ class UsersService
 const usersService = new UsersService()

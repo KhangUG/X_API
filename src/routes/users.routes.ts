@@ -1,11 +1,18 @@
 import { error } from 'console'
 import { Router } from 'express'
-import { loginController, registerController, logoutController } from '~/controllers/users.controllers'
+import {
+  loginController,
+  registerController,
+  logoutController,
+  verifyEmailController,
+  
+} from '~/controllers/users.controllers'
 import {
   accessTokenValidator,
   loginValidator,
   refreshTokenValidator,
-  registerValidator
+  registerValidator,
+  emailVerifyTokenValidator
 } from '~/middlewares/users.middlewares'
 import { wrapRequestHandler } from '~/utils/handlers'
 
@@ -35,5 +42,15 @@ usersRouter.post('/register', registerValidator, wrapRequestHandler(registerCont
  * body: {refreshToken: string}
  */
 usersRouter.post('/logout', accessTokenValidator, refreshTokenValidator, wrapRequestHandler(logoutController))
+
+/**
+ * discription: sigout a new user
+ * path: /sigout
+ * method: POST
+ * headers: {Authorization : Bearer token}
+ * body: {refreshToken: string}
+ */
+usersRouter.post('/verify-email', emailVerifyTokenValidator, wrapRequestHandler(verifyEmailController as any))
+
 
 export default usersRouter
