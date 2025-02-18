@@ -14,18 +14,18 @@ export const validate = (validation: RunnableValidationChains<ValidationChain>) 
     console.log(errorsObject)
 
     for (const key in errorsObject) {
-      const {msg} = errorsObject[key]
+      const { msg } = errorsObject[key]
       const error = errorsObject[key]
       if (msg instanceof ErrorWithStatus && msg.status !== httpStatus.unprocessableEntity) {
-       return next(msg)
+        return next(msg)
       }
     }
     console.log(errorsObject)
-    
+
     if (errors.isEmpty()) {
       return next()
     }
-    
-    res.status(422).json({ errors:errorsObject })
+
+    res.status(422).json({ errors: errorsObject })
   }
 }
