@@ -1,56 +1,36 @@
-import { error } from 'console'
 import { Router } from 'express'
-import {
-  loginController,
-  registerController,
-  logoutController,
-  verifyEmailController,
-  
-} from '~/controllers/users.controllers'
+import { loginController, logoutController, registerController } from '~/controllers/users.controllers'
 import {
   accessTokenValidator,
   loginValidator,
   refreshTokenValidator,
-  registerValidator,
-  emailVerifyTokenValidator
+  registerValidator
 } from '~/middlewares/users.middlewares'
 import { wrapRequestHandler } from '~/utils/handlers'
-
 const usersRouter = Router()
 
 /**
- * discription: register a new user
- * path: /login
- * method: POST
- * body: { email: string, password: string}
+ * Description. Login a user
+ * Path: /login
+ * Method: POST
+ * Body: { email: string, password: string }
  */
 usersRouter.post('/login', loginValidator, wrapRequestHandler(loginController))
-
 /**
- * discription: register a new user
- * path: /register
- * method: POST
- * body: {name: string, email: string, password: string, confirmpassword: string, dateOfBirth: ISO8601}
+ * Description. Register a new user
+ * Path: /register
+ * Method: POST
+ * Body: { name: string, email: string, password: string, confirm_password: string, date_of_birth: ISO8601 }
  */
 usersRouter.post('/register', registerValidator, wrapRequestHandler(registerController))
 
 /**
- * discription: sigout a new user
- * path: /sigout
- * method: POST
- * headers: {Authorization : Bearer token}
- * body: {refreshToken: string}
+ * Description. Logout a user
+ * Path: /logout
+ * Method: POST
+ * Header: { Authorization: Bearer <access_token> }
+ * Body: { refresh_token: string }
  */
 usersRouter.post('/logout', accessTokenValidator, refreshTokenValidator, wrapRequestHandler(logoutController))
-
-/**
- * discription: sigout a new user
- * path: /sigout
- * method: POST
- * headers: {Authorization : Bearer token}
- * body: {refreshToken: string}
- */
-usersRouter.post('/verify-email', emailVerifyTokenValidator, wrapRequestHandler(verifyEmailController as any))
-
 
 export default usersRouter

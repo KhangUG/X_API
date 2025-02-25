@@ -4,7 +4,7 @@ import { check } from 'express-validator'
 import { RegisterReqBody } from '~/models/requests/User.requests'
 import { hashPassword } from '~/utils/crypto'
 import { signToken } from '~/utils/jwt'
-import { tokenType } from '~/constants/enum'
+import { TokenType } from '~/constants/enums'
 import RefreshToken from '~/models/schemas/refreshToken.schema'
 import { ObjectId } from 'mongodb'
 import { config } from 'dotenv'
@@ -19,7 +19,7 @@ class UsersService {
     return signToken({
       payload: {
         user_id,
-        token_type: tokenType.ACCESS_TOKEN
+        token_type: TokenType.AccessToken
       },
       privateKey: process.env.JWT_SECRET_ACCESS_TOKEN as string,
       options: {
@@ -32,7 +32,7 @@ class UsersService {
     return signToken({
       payload: {
         user_id,
-        token_type: tokenType.REFRESH_TOKEN
+        token_type: TokenType.RefreshToken
       },
       privateKey: process.env.JWT_SECRET_REFRESH_TOKEN as string,
       options: {
@@ -45,7 +45,7 @@ class UsersService {
     return signToken({
       payload: {
         user_id,
-        token_type: tokenType.EMAIL_VERIFY_TOKEN
+        token_type: TokenType.EmailVerifyToken
       },
       privateKey: process.env.JWT_SECRET_EMAIL_VERIFY_TOKEN as string,
       options: {
