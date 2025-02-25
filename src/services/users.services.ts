@@ -1,21 +1,17 @@
 import User from '~/models/schemas/User.schema'
 import databaseService from './database.services'
-import { check } from 'express-validator'
 import { RegisterReqBody } from '~/models/requests/User.requests'
 import { hashPassword } from '~/utils/crypto'
 import { signToken } from '~/utils/jwt'
-import { TokenType } from '~/constants/enums'
+import { TokenType,UserVerifyStatus } from '~/constants/enums'
 import RefreshToken from '~/models/schemas/refreshToken.schema'
 import { ObjectId } from 'mongodb'
 import { config } from 'dotenv'
-import { access } from 'fs'
-
 config()
 
 class UsersService {
   // Hàm này sẽ tạo ra một access token và một refresh token
   private sigAccessToken(user_id: string) {
-    const expiresIn = process.env.ACCESS_TOKEN_EXPIRE_IN || '15m'
     return signToken({
       payload: {
         user_id,
@@ -23,7 +19,7 @@ class UsersService {
       },
       privateKey: process.env.JWT_SECRET_ACCESS_TOKEN as string,
       options: {
-        expiresIn: parseInt(expiresIn)
+        expiresIn: parseInt(process.env.ACCESS_TOKEN_EXPIRE_IN as string)
       }
     })
   }
@@ -31,17 +27,17 @@ class UsersService {
   private sigRefreshToken(user_id: string) {
     return signToken({
       payload: {
-        user_id,
-        token_type: TokenType.RefreshToken
+      user_id,
+      token_type: TokenType.RefreshToken
       },
       privateKey: process.env.JWT_SECRET_REFRESH_TOKEN as string,
       options: {
-        expiresIn: parseInt(process.env.REFRESH_TOKEN_EXPIRE_IN as string)
+      expiresIn: parseInt(process.env.REFRESH_TOKEN_EXPIRE_IN as string)
       }
     })
   }
 
-  private sigEmailVerifyToken(user_id: string) {
+    private signEmailVerifyToken(user_id: string) {
     return signToken({
       payload: {
         user_id,
@@ -59,7 +55,7 @@ class UsersService {
   }
   async register(payload: RegisterReqBody) {
     const user_id = new ObjectId().toString()
-    const email_verify_token = await this.sigEmailVerifyToken(user_id) // Tạo email verify token
+    const email_verify_token = await this.signEmailVerifyToken(user_id) // Tạo email verify token
     await databaseService.users.insertOne(
       new User({
         ...payload,
