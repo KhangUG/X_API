@@ -2,7 +2,7 @@ import e from 'express'
 import express from 'express'
 import { body, validationResult, ContextRunner, ValidationChain } from 'express-validator'
 import { RunnableValidationChains } from 'express-validator/lib/middlewares/schema'
-import { httpStatus } from '~/constants/httpStatus'
+import HTTP_STATUS from '~/constants/httpStatus'
 import { ErrorWithStatus } from '~/models/Errors'
 
 // can be reused by many routes
@@ -16,7 +16,7 @@ export const validate = (validation: RunnableValidationChains<ValidationChain>) 
     for (const key in errorsObject) {
       const { msg } = errorsObject[key]
       const error = errorsObject[key]
-      if (msg instanceof ErrorWithStatus && msg.status !== httpStatus.unprocessableEntity) {
+      if (msg instanceof ErrorWithStatus && msg.status !== HTTP_STATUS.UNPROCESSABLE_ENTITY) {
         return next(msg)
       }
     }

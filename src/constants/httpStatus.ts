@@ -1,11 +1,12 @@
-import { ok } from 'assert'
+const HTTP_STATUS = {
+  OK: 200,
+  CREATED: 201,
+  ACCEPTED: 202,
+  NO_CONTENT: 204,
+  UNPROCESSABLE_ENTITY: 422,
+  UNAUTHORIZED: 401,
+  NOT_FOUND: 404,
+  INTERNAL_SERVER_ERROR: 500
+} as const
 
-export const httpStatus = {
-  ok: 200,
-  created: 201,
-  badRequest: 400,
-  unauthorized: 401,
-  notFound: 404,
-  unprocessableEntity: 422,
-  internalServerError: 500
-}
+export default HTTP_STATUS
