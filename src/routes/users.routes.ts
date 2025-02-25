@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import {
   
+  forgotPasswordController,
   loginController,
   logoutController,
   registerController,
@@ -12,7 +13,8 @@ import {
   loginValidator,
   refreshTokenValidator,
   registerValidator,
-  emailVerifyTokenValidator
+  emailVerifyTokenValidator,
+  forgotPasswordValidator
 } from '~/middlewares/users.middlewares'
 import { wrapRequestHandler } from '~/utils/handlers'
 const usersRouter = Router()
@@ -49,4 +51,5 @@ usersRouter.post('/logout', accessTokenValidator, refreshTokenValidator, wrapReq
  */
 usersRouter.post('/verify-email', emailVerifyTokenValidator, wrapRequestHandler(verifyEmailController))
 usersRouter.post('/resend-verify-email', accessTokenValidator, wrapRequestHandler(resendVerifyEmailController))
+usersRouter.post('/forgot-password', forgotPasswordValidator, wrapRequestHandler(forgotPasswordController))
 export default usersRouter

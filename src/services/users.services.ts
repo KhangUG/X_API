@@ -26,6 +26,19 @@ class UsersService {
       }
     })
   }
+  private signForgotPasswordToken(user_id: string) {
+    const expiresIn = process.env.FORGOT_PASSWORD_TOKEN_EXPIRES_IN as string | undefined;
+    return signToken({
+      payload: {
+        user_id,
+        token_type: TokenType.ForgotPasswordToken
+      },
+      privateKey: process.env.JWT_SECRET_FORGOT_PASSWORD_TOKEN as string,
+      options: {
+        expiresIn: expiresIn as unknown as number | undefined
+      }
+    })
+  }
   // Hàm này sẽ tạo ra một refresh token
   private sigRefreshToken(user_id: string) {
     const expiresIn = process.env.REFRESH_TOKEN_EXPIRE_IN as string | undefined;
@@ -103,6 +116,7 @@ class UsersService {
     } // Trả về access token và refresh token
   }
 
+  
   async logout(refreshToken: string) {
     await databaseService.refreshTokens.deleteOne({ token: refreshToken }) // Xóa refresh token khỏi database
     return {
@@ -150,7 +164,24 @@ class UsersService {
       message: USERS_MESSAGES.RESEND_VERIFY_EMAIL_SUCCESS
     }
   }
+  async forgotPassword(user_id: string) {
+    const forgot_password_token = await this.signForgotPasswordToken(user_id)
+    await databaseService.users.updateOne({ _id: new ObjectId(user_id) }, [
+      {
+        $set: {
+          forgot_password_token,
+          updated_at: '$$NOW'
+        }
+      }
+    ])
+    // Gửi email kèm đường link đến email người dùng: https://twitter.com/forgot-password?token=token
+    console.log('forgot_password_token: ', forgot_password_token)
+    return {
+      message: USERS_MESSAGES.CHECK_EMAIL_TO_RESET_PASSWORD
+    }
+  }
 }
+
 
 
 // Tạo một đối tượng mới từ class UsersService
