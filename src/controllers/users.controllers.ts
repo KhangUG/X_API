@@ -9,7 +9,8 @@ import {
   LogoutReqBody,
   RegisterReqBody,
   TokenPayload,
-  VerifyEmailReqBody
+  VerifyEmailReqBody,
+  VerifyForgotPasswordReqBody
 } from '~/models/requests/User.requests'
 import User from '~/models/schemas/User.schema'
 import usersService from '~/services/users.services'
@@ -78,17 +79,17 @@ export const resendVerifyEmailController = async (req: Request, res: Response, n
     res.status(HTTP_STATUS.NOT_FOUND).json({
       message: USERS_MESSAGES.USER_NOT_FOUND
     })
-    return 
+    return
   }
   if (user.verify === UserVerifyStatus.Verified) {
     res.json({
       message: USERS_MESSAGES.EMAIL_ALREADY_VERIFIED_BEFORE
     })
-    return 
+    return
   }
   const result = await usersService.resendVerifyEmail(user_id)
   res.json(result)
-  return 
+  return
 }
 
 export const logoutController = async (req: Request<ParamsDictionary, any, LogoutReqBody>, res: Response) => {
@@ -107,4 +108,14 @@ export const forgotPasswordController = async (
   const result = await usersService.forgotPassword((_id as ObjectId).toString())
   res.json(result)
   return
+}
+export const verifyForgotPasswordController = async (
+  req: Request<ParamsDictionary, any, VerifyForgotPasswordReqBody>,
+  res: Response,
+  next: NextFunction
+) => {
+  res.json({
+    message: USERS_MESSAGES.VERIFY_FORGOT_PASSWORD_SUCCESS
+  })
+  return 
 }
