@@ -3,7 +3,7 @@ import databaseService from './database.services'
 import { RegisterReqBody } from '~/models/requests/User.requests'
 import { hashPassword } from '~/utils/crypto'
 import { signToken } from '~/utils/jwt'
-import { TokenType,UserVerifyStatus } from '~/constants/enums'
+import { TokenType, UserVerifyStatus } from '~/constants/enums'
 import RefreshToken from '~/models/schemas/refreshToken.schema'
 import { ObjectId } from 'mongodb'
 import { config } from 'dotenv'
@@ -12,32 +12,36 @@ config()
 class UsersService {
   // Hàm này sẽ tạo ra một access token và một refresh token
   private sigAccessToken(user_id: string) {
+    const expiresIn = process.env.ACCESS_TOKEN_EXPIRE_IN as string | undefined;
     return signToken({
+      
       payload: {
         user_id,
         token_type: TokenType.AccessToken
       },
       privateKey: process.env.JWT_SECRET_ACCESS_TOKEN as string,
       options: {
-        expiresIn: parseInt(process.env.ACCESS_TOKEN_EXPIRE_IN as string)
+        expiresIn: expiresIn as unknown as number | undefined 
       }
     })
   }
   // Hàm này sẽ tạo ra một refresh token
   private sigRefreshToken(user_id: string) {
+    const expiresIn = process.env.REFRESH_TOKEN_EXPIRE_IN as string | undefined;
     return signToken({
       payload: {
-      user_id,
-      token_type: TokenType.RefreshToken
+        user_id,
+        token_type: TokenType.RefreshToken
       },
       privateKey: process.env.JWT_SECRET_REFRESH_TOKEN as string,
       options: {
-      expiresIn: parseInt(process.env.REFRESH_TOKEN_EXPIRE_IN as string)
+        expiresIn: expiresIn as unknown as number | undefined
       }
     })
   }
 
-    private signEmailVerifyToken(user_id: string) {
+  private signEmailVerifyToken(user_id: string) {
+    const expiresIn = process.env.EMAIL_VERIFY_TOKEN_EXPIRE_IN as string | undefined;
     return signToken({
       payload: {
         user_id,
@@ -45,7 +49,8 @@ class UsersService {
       },
       privateKey: process.env.JWT_SECRET_EMAIL_VERIFY_TOKEN as string,
       options: {
-        expiresIn: parseInt(process.env.EMAIL_VERIFY_TOKEN_EXPIRE_IN as string)
+        expiresIn: expiresIn as unknown as number | undefined
+        
       }
     })
   }
