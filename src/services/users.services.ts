@@ -13,21 +13,20 @@ config()
 class UsersService {
   // Hàm này sẽ tạo ra một access token và một refresh token
   private sigAccessToken(user_id: string) {
-    const expiresIn = process.env.ACCESS_TOKEN_EXPIRE_IN as string | undefined;
+    const expiresIn = process.env.ACCESS_TOKEN_EXPIRE_IN as string | undefined
     return signToken({
-      
       payload: {
         user_id,
         token_type: TokenType.AccessToken
       },
       privateKey: process.env.JWT_SECRET_ACCESS_TOKEN as string,
       options: {
-        expiresIn: expiresIn as unknown as number | undefined 
+        expiresIn: expiresIn as unknown as number | undefined
       }
     })
   }
   private signForgotPasswordToken(user_id: string) {
-    const expiresIn = process.env.FORGOT_PASSWORD_TOKEN_EXPIRES_IN as string | undefined;
+    const expiresIn = process.env.FORGOT_PASSWORD_TOKEN_EXPIRES_IN as string | undefined
     return signToken({
       payload: {
         user_id,
@@ -41,7 +40,7 @@ class UsersService {
   }
   // Hàm này sẽ tạo ra một refresh token
   private sigRefreshToken(user_id: string) {
-    const expiresIn = process.env.REFRESH_TOKEN_EXPIRE_IN as string | undefined;
+    const expiresIn = process.env.REFRESH_TOKEN_EXPIRE_IN as string | undefined
     return signToken({
       payload: {
         user_id,
@@ -55,7 +54,7 @@ class UsersService {
   }
 
   private signEmailVerifyToken(user_id: string) {
-    const expiresIn = process.env.EMAIL_VERIFY_TOKEN_EXPIRE_IN as string | undefined;
+    const expiresIn = process.env.EMAIL_VERIFY_TOKEN_EXPIRE_IN as string | undefined
     return signToken({
       payload: {
         user_id,
@@ -64,7 +63,6 @@ class UsersService {
       privateKey: process.env.JWT_SECRET_EMAIL_VERIFY_TOKEN as string,
       options: {
         expiresIn: expiresIn as unknown as number | undefined
-        
       }
     })
   }
@@ -116,7 +114,6 @@ class UsersService {
     } // Trả về access token và refresh token
   }
 
-  
   async logout(refreshToken: string) {
     await databaseService.refreshTokens.deleteOne({ token: refreshToken }) // Xóa refresh token khỏi database
     return {
@@ -181,8 +178,6 @@ class UsersService {
     }
   }
 }
-
-
 
 // Tạo một đối tượng mới từ class UsersService
 const usersService = new UsersService()
