@@ -6,6 +6,7 @@ import HTTP_STATUS from '~/constants/httpStatus'
 import { pick } from 'lodash'
 import {
   ForgotPasswordReqBody,
+  GetProfileReqParams,
   LoginReqBody,
   LogoutReqBody,
   RegisterReqBody,
@@ -138,6 +139,15 @@ export const getMeController = async (req: Request, res: Response, next: NextFun
   const user = await usersService.getMe(user_id)
   res.json({
     message: USERS_MESSAGES.GET_ME_SUCCESS,
+    result: user
+  })
+  return 
+}
+export const getProfileController = async (req: Request<GetProfileReqParams>, res: Response, next: NextFunction) => {
+  const { username } = req.params
+  const user = await usersService.getProfile(username)
+  res.json({
+    message: USERS_MESSAGES.GET_PROFILE_SUCCESS,
     result: user
   })
   return 
