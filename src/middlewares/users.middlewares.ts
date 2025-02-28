@@ -13,6 +13,7 @@ import { capitalize } from 'lodash'
 import { ObjectId } from 'mongodb'
 import { TokenPayload } from '~/models/requests/User.requests'
 import { UserVerifyStatus } from '~/constants/enums'
+
 const passwordSchema: ParamSchema = {
   notEmpty: {
     errorMessage: USERS_MESSAGES.PASSWORD_IS_REQUIRED
@@ -71,7 +72,28 @@ const confirmPasswordSchema: ParamSchema = {
     }
   }
 }
+const userIdSchema: ParamSchema = {
+  custom: {
+    options: async (value: string, { req }) => {
+      if (!ObjectId.isValid(value)) {
+        throw new ErrorWithStatus({
+          message: USERS_MESSAGES.INVALID_USER_ID,
+          status: HTTP_STATUS.NOT_FOUND
+        })
+      }
+      const followed_user = await databaseService.users.findOne({
+        _id: new ObjectId(value)
+      })
 
+      if (followed_user === null) {
+        throw new ErrorWithStatus({
+          message: USERS_MESSAGES.USER_NOT_FOUND,
+          status: HTTP_STATUS.NOT_FOUND
+        })
+      }
+    }
+  }
+}
 const forgotPasswordTokenSchema: ParamSchema = {
   trim: true,
   custom: {
@@ -226,8 +248,8 @@ export const registerValidator = validate(
           }
         }
       },
-      passwordSchema,
-      confirmPasswordSchema,
+      password: passwordSchema,
+      confirm_password:confirmPasswordSchema,
 
       date_of_birth: dateOfBirthSchema,
     },
@@ -477,5 +499,23 @@ export const updateMeValidator = validate(
       cover_photo: imageSchema
     },
     ['body']
+  )
+ 
+)
+export const followValidator = validate(
+  checkSchema(
+    {
+      followed_user_id: userIdSchema
+    },
+    ['body']
+  )
+)
+
+export const unfollowValidator = validate(
+  checkSchema(
+    {
+      user_id: userIdSchema
+    },
+    ['params']
   )
 )
