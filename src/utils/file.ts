@@ -1,10 +1,11 @@
 import { NextFunction, Request, Response } from 'express'
-import formidable from 'formidable'
+import formidable, { File } from 'formidable'
 import path from 'path'
+import { UPLOAD_TEMP_DIR } from '~/constants/dir'
 
 export const handleUploadSingleImage = async (req: Request) => {
   const form = formidable({
-    uploadDir: path.resolve('uploads'),
+    uploadDir: UPLOAD_TEMP_DIR,
     maxFiles: 1,
     keepExtensions: true,
     maxFileSize: 300 * 1024 * 1024,
@@ -16,16 +17,23 @@ export const handleUploadSingleImage = async (req: Request) => {
       return valid
     }
   })
-  return new Promise((resolve, reject) => {
+  return new Promise<File>((resolve, reject) => {
     form.parse(req, (err, fields, files) => {
       if (err) {
         return reject(err)
       }
       // eslint-disable-next-line no-extra-boolean-cast
-      if(!Boolean(files.image)) {
+      if (!Boolean(files.image)) {
         return reject(new Error('File is empty'))
       }
-      resolve(files)
+      resolve((files.image as File[])[0])
     })
   })
+
+}
+
+export const getNameFromFullName = (fullname: string) => {
+  const namearr = fullname.split('.')
+  namearr.pop()
+  return namearr.join('')
 }
