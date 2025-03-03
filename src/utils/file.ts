@@ -38,7 +38,6 @@ export const handleUploadSingleImage = async (req: Request) => {
       resolve((files.image as File[])[0])
     })
   })
-
 }
 
 export const getNameFromFullName = (fullname: string) => {
