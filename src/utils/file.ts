@@ -2,6 +2,15 @@ import { NextFunction, Request, Response } from 'express'
 import formidable, { File } from 'formidable'
 import path from 'path'
 import { UPLOAD_TEMP_DIR } from '~/constants/dir'
+import fs from 'fs'
+export const initFolder = () => {
+  const uploadFolderPath = path.resolve('uploads')
+  if (!fs.existsSync(UPLOAD_TEMP_DIR)) {
+    fs.mkdirSync(UPLOAD_TEMP_DIR, {
+      recursive: true // mục đích là để tạo folder nested
+    })
+  }
+}
 
 export const handleUploadSingleImage = async (req: Request) => {
   const form = formidable({

@@ -9,12 +9,13 @@ class MediasService {
   async handleUploadSingleImage(req: Request) {
     const file = await handleUploadSingleImage(req)
     const newName = getNameFromFullName(file.newFilename)
-    const newPath = path.resolve(UPLOAD_DIR + `${newName}/.jpg`)
-    await sharp(file.filepath).jpeg({}).toFile(newPath)
+    const newPath = path.resolve(UPLOAD_DIR, `${newName}.jpg`)
+    await sharp(file.filepath).jpeg().toFile(newPath)
     fs.unlinkSync(file.filepath)
-    return `localhost:4000/uploads/${newName}.jpg`
+    return `http://localhost:4000/uploads/${newName}.jpg`
   }
 }
 
 const mediasService = new MediasService()
+
 export default mediasService
