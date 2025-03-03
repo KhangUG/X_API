@@ -4,9 +4,14 @@ import databaseService from './services/database.services'
 import { pick } from 'lodash'
 import { defaultErrorHandler } from './middlewares/error.middlewares'
 import mediasRouter from './routes/medias.routes'
+import { initFolder } from './utils/file'
+
 databaseService.connect()
 const app = express()
 const port = 4000
+
+// Tao folder uploads
+initFolder()
 
 app.use(express.json())
 app.use('/users', userRouter)
