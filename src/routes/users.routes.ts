@@ -159,7 +159,8 @@ usersRouter.post(
   verifiedUserValidator,
   followValidator,
   wrapRequestHandler(followController)
-)/**
+)
+/**
  * Description: Follow someone
  * Path: /follow/user_id
  * Method: DELETE

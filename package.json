@@ -29,6 +29,7 @@
     "mime-types": "^2.1.35",
     "minimist": "^1.2.8",
     "mongodb": "^6.13.0",
+    "nanoid": "^5.1.2",
     "sharp": "^0.33.5"
   },
   "devDependencies": {
