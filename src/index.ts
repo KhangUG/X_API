@@ -7,7 +7,8 @@ import mediasRouter from './routes/medias.routes'
 import { initFolder } from './utils/file'
 import { config } from 'dotenv'
 import { UPLOAD_IMAGE_DIR, UPLOAD_VIDEO_DIR } from './constants/dir'
-import staticRouter from './routes/static.routes'
+import staticRouter from '~/routes/static.routes'
+import tweetsRouter from '~/routes/tweets.routes'
 config()
 
 databaseService.connect()
@@ -20,8 +21,10 @@ initFolder()
 app.use(express.json())
 app.use('/users', userRouter)
 app.use('/medias', mediasRouter)
+app.use('/tweets', tweetsRouter)
 app.use('/static', staticRouter)
 app.use('/static/video', express.static(UPLOAD_VIDEO_DIR))
+
 
 app.use(defaultErrorHandler)
 
