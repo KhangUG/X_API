@@ -49,7 +49,7 @@ export const handleUploadVideo = async (req: Request) => {
     maxFileSize: 50 * 1024 * 1024,
     filter: function ({ name, originalFilename, mimetype }) {
       return true
-      // const valid = name == 'image' && Boolean(mimetype?.includes('image/'))
+      // const valid = name == 'video' && Boolean(mimetype?.includes('quicktime'))
       // if (!valid) {
       //   form.emit('error' as any, new Error('Invalid file type') as any)
       // }
@@ -65,10 +65,9 @@ export const handleUploadVideo = async (req: Request) => {
       if (!Boolean(files.video)) {
         return reject(new Error('File is empty'))
       }
-      
       const videos = files.video as File[]
       videos.forEach((video) => {
-        const ext  = getExtension(video.originalFilename as string)
+        const ext = getExtension(video.originalFilename as string)
         fs.renameSync(video.filepath, video.filepath + '.' + ext)
         video.newFilename = video.newFilename + '.' + ext
       })
@@ -86,4 +85,4 @@ export const getNameFromFullName = (fullname: string) => {
 export const getExtension = (fullname: string) => {
   const namearr = fullname.split('.')
   return namearr[namearr.length - 1]
-} 
+}
