@@ -24,8 +24,8 @@ class TweetsService {
         return result._id;
       })
     );
-  
-    return hashtagDocuments.filter((id): id is ObjectId => id !== null && id !== undefined);
+    return hashtagDocuments.filter((id): id is ObjectId => !!id);
+
   }
   async createTweet(user_id: string, body: TweetRequestBody) {
     const hashtags = await this.checkAndCreateHashtags(body.hashtags)
