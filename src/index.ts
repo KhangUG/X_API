@@ -11,10 +11,16 @@ import staticRouter from '~/routes/static.routes'
 import tweetsRouter from '~/routes/tweets.routes'
 import bookmarksRouter from './routes/bookmarks.routes'
 import likesRouter from './routes/likes.routes'
+import { createServer } from 'http'
+import { Server } from 'socket.io'
+
 config()
 
 databaseService.connect()
+
 const app = express()
+const httpServer = createServer(app)
+
 const port = process.env.PORT || 4000
 
 // Tao folder uploads
@@ -29,9 +35,21 @@ app.use('/likes', likesRouter)
 app.use('/static', staticRouter)
 app.use('/static/video', express.static(UPLOAD_VIDEO_DIR))
 
-
 app.use(defaultErrorHandler)
 
-app.listen(port, () => {
+const io = new Server(httpServer, {
+  cors: {
+    origin: '*',
+  }
+})
+
+io.on('connection', (socket) => {
+  console.log(`User connected: ${socket.id}`)
+  socket.on('disconnect', () => {
+    console.log(`User disconnected: ${socket.id}`)
+  })
+})
+
+httpServer.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
 })
