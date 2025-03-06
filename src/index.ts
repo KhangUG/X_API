@@ -39,15 +39,24 @@ app.use(defaultErrorHandler)
 
 const io = new Server(httpServer, {
   cors: {
-    origin: '*',
+    origin: 'http://localhost:3000',
   }
 })
 
 io.on('connection', (socket) => {
   console.log(`User connected: ${socket.id}`)
+
   socket.on('disconnect', () => {
     console.log(`User disconnected: ${socket.id}`)
   })
+
+  socket.on('hello', (data) => {
+    console.log(data)
+    
+  });
+
+  socket.emit('hi', { message: `Xin chào ${socket.id} da connect` });
+  
 })
 
 httpServer.listen(port, () => {
