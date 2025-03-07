@@ -44,7 +44,6 @@ class TweetsService {
     
 
     const tweet = await databaseService.tweets.findOne({ _id: new ObjectId(result.insertedId) });
-    console.log(tweet)
     
     return tweet
   }
