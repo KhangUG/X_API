@@ -239,7 +239,6 @@ export const tweetIdValidator = async (req: Request, res: Response, next: NextFu
         }
       ])
       .toArray()
-      console.log('tweet:', tweet)
 
     if (!tweet) {
       throw new ErrorWithStatus({
