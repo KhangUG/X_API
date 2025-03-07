@@ -1,11 +1,11 @@
 import express from 'express'
 import userRouter from './routes/users.routes'
 import databaseService from './services/database.services'
-import { pick } from 'lodash'
+
 import { defaultErrorHandler } from './middlewares/error.middlewares'
 import mediasRouter from './routes/medias.routes'
 import { initFolder } from './utils/file'
-import { config } from 'dotenv'
+
 import { UPLOAD_IMAGE_DIR, UPLOAD_VIDEO_DIR } from './constants/dir'
 import staticRouter from '~/routes/static.routes'
 import tweetsRouter from '~/routes/tweets.routes'
@@ -13,6 +13,7 @@ import bookmarksRouter from './routes/bookmarks.routes'
 import likesRouter from './routes/likes.routes'
 import { createServer } from 'http'
 import { Server } from 'socket.io'
+import { envConfig } from '~/constants/config'
 import YAML from 'yaml'
 
 // import fs from 'fs'
@@ -34,14 +35,14 @@ const options: swaggerJsdoc.Options = {
 }
 const openapiSpecification = swaggerJsdoc(options)
 
-config()
+
 
 databaseService.connect()
 
 const app = express()
 const httpServer = createServer(app)
 
-const port = process.env.PORT || 4000
+const port = envConfig.port || 4000
 
 // Tao folder uploads
 initFolder()

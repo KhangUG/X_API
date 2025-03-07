@@ -3,18 +3,17 @@ import { getNameFromFullName, handleUploadImage, handleUploadVideo } from '~/uti
 import sharp from 'sharp'
 import { UPLOAD_IMAGE_DIR } from '~/constants/dir'
 import path from 'path'
-import fs from 'fs'
+
 import fsPromise from 'fs/promises'
-import { isProduction } from '~/constants/config'
-import { config } from 'dotenv'
+
+
 import { MediaType } from '~/constants/enums'
 import { Media } from '~/models/Other'
 import { encodeHLSWithMultipleVideoStreams } from '~/utils/video'
-
+import { envConfig, isProduction } from '~/constants/config'
 import { uploadFileToS3 } from '~/utils/s3'
 import mime from 'mime'
 import { CompleteMultipartUploadCommandOutput } from '@aws-sdk/client-s3'
-config()
 
 class MediasService {
   async uploadImage(req: Request) {
@@ -46,8 +45,8 @@ class MediasService {
     const { newFilename } = files[0]
     return {
       url: isProduction
-        ? `${process.env.HOST}/static/${newFilename}`
-        : `http://localhost:${process.env.PORT}/static/video/${newFilename}`,
+        ? `${envConfig.host}/static/${newFilename}`
+        : `http://localhost:${envConfig.port}/static/video/${newFilename}`,
       type: MediaType.Video
     }
   }
