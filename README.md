@@ -38,8 +38,6 @@ Twitter Clone API là một hệ thống **backend** được xây dựng bằng
 
 ## 📂 API Endpoints
 
-
-## 📂 API Endpoints
 ### **1️⃣ Authentication**
 | Method | Endpoint | Mô tả |
 |--------|---------|-------|
