@@ -13,6 +13,7 @@ import bookmarksRouter from './routes/bookmarks.routes'
 import likesRouter from './routes/likes.routes'
 import { createServer } from 'http'
 import { Server } from 'socket.io'
+import '~/utils/s3'
 
 config()
 
