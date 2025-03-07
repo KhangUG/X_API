@@ -83,10 +83,5 @@ npm start
 Server sẽ chạy tại `http://localhost:5000`.
 
 ## 🎯 Tóm lại
-Twitter Clone API là một dự án hoàn chỉnh giúp bạn thể hiện kỹ năng **backend** của mình. Bạn có thể:
-✅ Đưa link demo API (sử dụng Postman hoặc Swagger)
-✅ Triển khai trên **Render, Vercel hoặc AWS** để khách hàng test trực tiếp
-✅ Viết thêm tài liệu hướng dẫn sử dụng
-
-🔥 **Chúc bạn thành công!** 🚀
+Twitter Clone API là một dự án hoàn chỉnh giúp bạn thể hiện kỹ năng **backend** của mình.
 
