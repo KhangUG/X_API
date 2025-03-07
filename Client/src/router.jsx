@@ -3,6 +3,8 @@ import Home from './Home'
 import Login from './Login'
 import Chat from './chat'
 import VerifyEmail from './VerifyEmail'
+import VerifyForgotPasswordToken from './VerifyForgotPasswordToken'
+import ResetPassword from './ResetPassword'
 
 const router = createBrowserRouter([
   {
@@ -20,6 +22,14 @@ const router = createBrowserRouter([
   {
     path: '/email-verifications',
     element: <VerifyEmail />
+  },
+  {
+    path: '/forgot-password',
+    element: <VerifyForgotPasswordToken />
+  },
+  {
+    path: '/reset-password',
+    element: <ResetPassword />
   }
 ])
 
