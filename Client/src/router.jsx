@@ -2,6 +2,7 @@ import { createBrowserRouter } from 'react-router-dom'
 import Home from './Home'
 import Login from './Login'
 import Chat from './chat'
+import VerifyEmail from './VerifyEmail'
 
 const router = createBrowserRouter([
   {
@@ -15,6 +16,10 @@ const router = createBrowserRouter([
   {
     path: '/chat',
     element: <Chat />
+  },
+  {
+    path: '/email-verifications',
+    element: <VerifyEmail />
   }
 ])
 
