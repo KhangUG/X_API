@@ -12,28 +12,32 @@ Twitter Clone API là một hệ thống **backend** được xây dựng bằng
 - **Storage**: Cloudinary / AWS S3 (lưu ảnh & video)
 - **Deployment**: Docker, Kubernetes, Nginx
 
-## ⚙ Tính năng chính
-### 1️⃣ Authentication & User Management
-✅ Đăng ký & Đăng nhập (Email/Password, OAuth2)
-✅ Xác thực người dùng bằng JWT
-✅ Cập nhật hồ sơ cá nhân (username, avatar, bio)
-✅ Theo dõi & bỏ theo dõi người dùng
+## 🔧 Tính năng chính  
 
-### 2️⃣ Tweet & Interaction
-✅ Đăng tweet với nội dung, hình ảnh, video
-✅ Like & Unlike tweet
-✅ Comment & trả lời comment
-✅ Retweet & Quote Tweet
-✅ Đếm lượt xem tweet
+### 1️⃣ Authentication & User Management  
+- ✅ Đăng ký & Đăng nhập (Email/Password, OAuth2)  
+- ✅ Xác thực người dùng bằng JWT  
+- ✅ Cập nhật hồ sơ cá nhân (username, avatar, bio)  
+- ✅ Theo dõi & bỏ theo dõi người dùng  
 
-### 3️⃣ Feeds & Notifications
-✅ Trang chủ (Home Feed): Hiển thị tweet từ người dùng đã follow
-✅ Thông báo (Notification): Khi có ai đó like, retweet, comment tweet của bạn
-✅ Trending Hashtags: Thống kê các hashtag phổ biến
+### 2️⃣ Tweet & Interaction  
+- ✅ Đăng tweet với nội dung, hình ảnh, video  
+- ✅ Like & Unlike tweet  
+- ✅ Comment & trả lời comment  
+- ✅ Retweet & Quote Tweet  
+- ✅ Đếm lượt xem tweet  
 
-### 4️⃣ Realtime & Messaging
-✅ Chat trực tiếp giữa các người dùng bằng WebSocket
-✅ Thông báo realtime khi có like, comment, hoặc follow
+### 🔗 3️⃣ Feeds & Notifications  
+- ✅ Trang chủ (Home Feed): Hiển thị tweet từ người dùng đã follow  
+- ✅ Thông báo (Notification): Khi có ai đó like, retweet, comment tweet của bạn  
+- ✅ Trending Hashtags: Thống kê các hashtag phổ biến  
+
+### 4️⃣ Realtime & Messaging  
+- ✅ Chat trực tiếp giữa các người dùng bằng WebSocket  
+- ✅ Thông báo realtime khi có like, comment, hoặc follow  
+
+## 📂 API Endpoints
+
 
 ## 📂 API Endpoints
 ### **1️⃣ Authentication**
