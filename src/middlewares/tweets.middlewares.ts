@@ -226,9 +226,6 @@ export const tweetIdValidator = async (req: Request, res: Response, next: NextFu
                   }
                 }
               }
-            },
-            views: {
-              $add: ['$user_views', '$guest_views']
             }
           }
         },

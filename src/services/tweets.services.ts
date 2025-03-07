@@ -17,15 +17,14 @@ class TweetsService {
             upsert: true,
             returnDocument: 'after'
           }
-        );
+        )
         if (!result) {
-          throw new Error(`Không thể tạo hoặc tìm thấy hashtag: ${hashtag}`);
+          throw new Error(`Không thể tạo hoặc tìm thấy hashtag: ${hashtag}`)
         }
-        return result._id;
+        return result._id
       })
-    );
-    return hashtagDocuments.filter((id): id is ObjectId => !!id);
-
+    )
+    return hashtagDocuments.filter((id): id is ObjectId => !!id)
   }
   async createTweet(user_id: string, body: TweetRequestBody) {
     const hashtags = await this.checkAndCreateHashtags(body.hashtags)
@@ -33,7 +32,7 @@ class TweetsService {
       new Tweet({
         audience: body.audience,
         content: body.content,
-        hashtags:[] ,// Chỗ này chưa làm, tạm thời để rỗng
+        hashtags: [], // Chỗ này chưa làm, tạm thời để rỗng
         mentions: body.mentions,
         medias: body.medias,
         parent_id: body.parent_id,
@@ -41,11 +40,28 @@ class TweetsService {
         user_id: new ObjectId(user_id)
       })
     )
-    
 
-    const tweet = await databaseService.tweets.findOne({ _id: new ObjectId(result.insertedId) });
-    
+    const tweet = await databaseService.tweets.findOne({ _id: new ObjectId(result.insertedId) })
+
     return tweet
+  }
+  async increaseView(tweet_id: string, user_id: string) {
+    const inc = user_id ? { user_views: 1 } : { guest_views: 1 }
+    const result = await databaseService.tweets.findOneAndUpdate(
+      { _id: new ObjectId(tweet_id) },
+      {
+        $inc: inc,
+        $currentDate: { updated_at: true }
+      },
+      {
+        returnDocument: 'after',
+        projection: { user_views: 1, guest_views: 1 }
+      }
+    )
+    return result as WithId<{
+      user_views: number
+      guest_views: number
+    }>
   }
 }
 
